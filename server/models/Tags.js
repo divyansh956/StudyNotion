@@ -7,11 +7,11 @@ const tagsSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    course: {
+    course: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course',
         required: true,
-    },
+    }],
 });
 
 modules.exports = mongoose.model('Tags', tagsSchema);
