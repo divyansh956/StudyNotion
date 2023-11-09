@@ -1,6 +1,6 @@
 const e = require('express');
 const Course = require('../models/Course');
-const Tag = require('../models/Tags');
+const Tag = require('../models/Category');
 const User = require('../models/User');
 const { uploadImage } = require('../utils/imageUploader');
 
