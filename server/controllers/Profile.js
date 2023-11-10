@@ -16,46 +16,63 @@ exports.updateProfile = async (req, res) => {
       about = "",
       contactNumber = "",
       gender = "",
-    } = req.body
-    const id = req.user.id
+    } = req.body;
 
-    // Find the profile by id
-    const userDetails = await User.findById(id)
-    const profile = await Profile.findById(userDetails.additionalDetails)
+    const id = req.user.id;
 
+    // Find the user by id and update first name and last name
     const user = await User.findByIdAndUpdate(id, {
       firstName,
       lastName,
-    })
-    await user.save()
+    });
+
+    // Check if the user is not found
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Find the profile by id
+    const profile = await Profile.findById(user.additionalDetails);
+
+    // Check if the profile is not found
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        message: "Profile not found",
+      });
+    }
 
     // Update the profile fields
-    profile.dateOfBirth = dateOfBirth
-    profile.about = about
-    profile.contactNumber = contactNumber
-    profile.gender = gender
+    profile.dateOfBirth = dateOfBirth;
+    profile.about = about;
+    profile.contactNumber = contactNumber;
+    profile.gender = gender;
 
     // Save the updated profile
-    await profile.save()
+    await profile.save();
 
     // Find the updated user details
     const updatedUserDetails = await User.findById(id)
       .populate("additionalDetails")
-      .exec()
+      .exec();
 
     return res.json({
       success: true,
       message: "Profile updated successfully",
       updatedUserDetails,
-    })
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       success: false,
       error: error.message,
-    })
+    });
   }
-}
+};
+
 
 exports.deleteAccount = async (req, res) => {
   try {
