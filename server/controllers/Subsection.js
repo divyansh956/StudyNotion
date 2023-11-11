@@ -49,51 +49,43 @@ exports.createSubSection = async (req, res) => {
 // Update a sub-section
 exports.updateSubSection = async (req, res) => {
   try {
-    const { sectionId, subSectionId, title, description } = req.body;
-    const subSection = await SubSection.findById(subSectionId);
+    // Extract necessary information from the request body
+    const { subSectionId, title, description } = req.body;
+    const video = req.files.video;
 
-    if (!subSection) {
-      return res.status(404).json({
-        success: false,
-        message: "SubSection not found",
-      });
+    // Check if subSectionId is provided
+    if (!subSectionId) {
+      return res.status(400).json({ success: false, message: "subSectionId is required" });
     }
 
-    // Update sub-section properties if provided
-    if (title !== undefined) {
-      subSection.title = title;
-    }
+    // Prepare an update object with only the provided fields
+    const updateObject = {};
+    if (title) updateObject.title = title;
+    if (description) updateObject.description = description;
 
-    if (description !== undefined) {
-      subSection.description = description;
-    }
-
-    if (req.files && req.files.video !== undefined) {
-      // Update video and duration if a new video is provided
-      const video = req.files.video;
+    // If a new video is provided, upload it to Cloudinary and update the fields
+    if (video) {
       const uploadDetails = await uploadImageToCloudinary(video, process.env.FOLDER_NAME);
-      subSection.videoUrl = uploadDetails.secure_url;
-      subSection.timeDuration = `${uploadDetails.duration}`;
+      updateObject.timeDuration = `${uploadDetails.duration}`;
+      updateObject.videoUrl = uploadDetails.secure_url;
     }
 
-    // Save the updated sub-section
-    await subSection.save();
+    // Update the sub-section with the necessary information
+    const updatedSubSection = await SubSection.findByIdAndUpdate(
+      subSectionId,
+      updateObject,
+      { new: true }
+    );
 
-    // Find updated section and return it
-    const updatedSection = await Section.findById(sectionId).populate("subSection");
-
-    console.log("Updated section:", updatedSection);
-
-    return res.json({
-      success: true,
-      message: "SubSection updated successfully",
-      data: updatedSection,
-    });
+    // Return the updated sub-section in the response
+    return res.status(200).json({ success: true, data: updatedSubSection });
   } catch (error) {
-    console.error(error);
+    // Handle any errors that may occur during the process
+    console.error("Error updating sub-section:", error);
     return res.status(500).json({
       success: false,
-      message: "An error occurred while updating the section",
+      message: "Internal server error",
+      error: error.message,
     });
   }
 };

@@ -19,7 +19,7 @@ exports.createCourse = async (req, res) => {
       courseDescription,
       whatYouWillLearn,
       price,
-      tag: _tag,
+      tag: _tag, // Stringified Array
       category,
       status,
       instructions: _instructions,
@@ -213,7 +213,7 @@ exports.editCourse = async (req, res) => {
 exports.getAllCourses = async (req, res) => {
   try {
     const allCourses = await Course.find(
-      { status: "Published" },
+      { status: "Draft" },
       {
         courseName: true,
         price: true,
