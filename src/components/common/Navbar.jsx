@@ -12,9 +12,9 @@ import { ACCOUNT_TYPE } from "../../utils/constants"
 import ProfileDropdown from "../core/Auth/ProfileDropDown"
 
 function Navbar() {
-  const token = useSelector((state) => state.auth.token ?? null)
-  const user = useSelector((state) => state.profile.user ?? null)
-  const totalItems = useSelector((state) => state.cart.totalItems ?? 0)
+  const token = useSelector((state) => state.auth.token)
+  const user = useSelector((state) => state.profile.user)
+  const totalItems = useSelector((state) => state.cart.totalItems)
   const location = useLocation()
 
   const [subLinks, setSubLinks] = useState([])
@@ -68,7 +68,7 @@ function Navbar() {
                         <div className="absolute left-[50%] top-0 -z-10 h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-richblack-5"></div>
                         {loading ? (
                           <p className="text-center">Loading...</p>
-                        ) : (subLinks && subLinks.length) ? (
+                        ) : (subLinks?.length) ? (
                           <>
                             {subLinks
                               ?.filter(
