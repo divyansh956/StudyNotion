@@ -31,7 +31,7 @@ app.use(cookieParser());
 
 app.use(
 	cors({
-		origin: "*",
+		origin: "https://studynotion-frontend-eta.vercel.app/",
 		credentials: true,
 	})
 );
