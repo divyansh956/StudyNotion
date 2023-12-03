@@ -24,8 +24,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
 	cors({
-		origin: "http://localhost:3000",
-		credentials: true,
+		origin: ['https://employee-management-application.vercel.app'],
+		methods: ['GET', 'POST', 'PUT', 'DELETE'],
+		crendentials: true
 	})
 )
 
