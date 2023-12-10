@@ -22,12 +22,12 @@ database.connect();
 //middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-	cors({
-		origin: "https://studynotion-frontend-mu.vercel.app",
-		credentials: true,
-	})
-);
+const corsOptions = {
+    origin: ['https://studynotion-frontend-mu.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    crendentials: true
+};
+app.use(cors(corsOptions));
 
 app.use(
 	fileUpload({
