@@ -6,7 +6,7 @@ import { setPaymentLoading } from "../../slices/courseSlice";
 import { resetCart } from "../../slices/cartSlice";
 
 
-const { COURSE_PAYMENT_API, COURSE_VERIFY_API, SEND_PAYMENT_SUCCESS_EMAIL_API } = studentEndpoints;
+const { COURSE_PAYMENT_API, DIRECT_COURSE_API, SEND_PAYMENT_SUCCESS_EMAIL_API } = studentEndpoints;
 
 function loadScript(src) {
     return new Promise((resolve) => {
@@ -103,11 +103,10 @@ async function verifyPayment(bodyData, token, navigate, dispatch) {
     const toastId = toast.loading("Verifying Payment....");
     dispatch(setPaymentLoading(true));
     try {
-        // console.log("PRINTING VERIFY PAYMENT BODY DATA", bodyData);
         const courses = bodyData.courses;
         const userId = bodyData.userDetails._id;
-        const response = await apiConnector("POST", COURSE_VERIFY_API, { courses, userId }, {
-            Authorization: `Bearer ${token}`,
+        const response = await apiConnector("POST", DIRECT_COURSE_API, { courses, userId }, {
+            Authorization: `Bearer ${token}`
         })
 
         if (!response.data.success) {

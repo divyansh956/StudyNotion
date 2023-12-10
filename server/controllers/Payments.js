@@ -74,7 +74,7 @@ exports.verifyPayment = async (req, res) => {
     //   return res.status(200).json({ success: true, message: "Payment Verified" });
     // }
 
-    await enrollStudents(courses, userId, res);
+    // await enrollStudents(courses, userId, res);
     return res.status(200).json({ success: true, message: "Payment Verified" });
   }
   catch (error) {
@@ -112,7 +112,8 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
 };
 
 // Enroll the student in the courses
-const enrollStudents = async (courses, userId, res) => {
+exports.enrollStudents = async (req, res) => {
+  const { courses, userId } = req.body;
   if (!courses || !userId) {
     return res.status(400).json({ success: false, message: "Please Provide Course ID and User ID" });
   }
@@ -121,7 +122,7 @@ const enrollStudents = async (courses, userId, res) => {
     try {
       // Find the course and enroll the student in it
       const enrolledCourse = await Course.findOneAndUpdate(
-        courseId,
+        { _id: courseId },
         { $push: { studentsEnrolled: userId } },
         { new: true }
       );
@@ -162,7 +163,8 @@ const enrollStudents = async (courses, userId, res) => {
         )
       );
 
-      console.log("Email sent successfully: ", emailResponse.response);
+      console.log("Email sent successfully: ");
+      return res.status(200).json({ success: true, message: "Payment Verified" });
     } catch (error) {
       console.log(error);
       return res.status(400).json({ success: false, error: error.message });
