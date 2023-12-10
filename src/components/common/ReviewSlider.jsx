@@ -16,10 +16,23 @@ import { Autoplay, FreeMode, Pagination } from "swiper"
 // Get apiFunction and the endpoint
 import { apiConnector } from "../../services/apiconnector"
 import { ratingsEndpoints } from "../../services/apis"
+import { useWindowSize } from 'react-use';
 
 function ReviewSlider() {
   const [reviews, setReviews] = useState([])
   const truncateWords = 15
+
+  const { width } = useWindowSize();
+
+  let slidesPerView = 1;
+
+  if (width >= 1200) {
+    slidesPerView = 4;
+  } else if (width >= 992) {
+    slidesPerView = 3;
+  } else if (width >= 768) {
+    slidesPerView = 2;
+  }
 
   useEffect(() => {
     ; (async () => {
@@ -39,7 +52,7 @@ function ReviewSlider() {
     <div className="text-white w-full">
       <div className="my-[50px] h-[184px] max-w-maxContentTab lg:max-w-maxContent">
         <Swiper
-          slidesPerView={4}
+          slidesPerView={slidesPerView}
           spaceBetween={25}
           loop={true}
           freeMode={true}
@@ -48,7 +61,7 @@ function ReviewSlider() {
             disableOnInteraction: false,
           }}
           modules={[FreeMode, Pagination, Autoplay]}
-          className="w-full "
+          className="w-full"
         >
           {reviews.map((review, i) => {
             return (
@@ -100,7 +113,7 @@ function ReviewSlider() {
           {/* <SwiperSlide>Slide 1</SwiperSlide> */}
         </Swiper>
       </div>
-    </div>
+    </div >
   )
 }
 
